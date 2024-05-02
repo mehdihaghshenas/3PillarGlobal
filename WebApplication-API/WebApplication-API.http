@@ -1,0 +1,15 @@
+@WebApplication_API_HostAddress = http://localhost:5155
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Ik1laGRpIiwic3ViIjoiTWVoZGkiLCJqdGkiOiI2MzcyYjY2YSIsInNjb3BlIjoiZ3JlZXRpbmdzX2FwaSIsInJvbGUiOlsiYWRtaW4iLCJ1c2VyIiwic2Rhc2QiXSwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6NTgyMDEiLCJodHRwczovL2xvY2FsaG9zdDo0NDMwMyIsImh0dHA6Ly9sb2NhbGhvc3Q6NTE1NSIsImh0dHBzOi8vbG9jYWxob3N0OjcyOTYiXSwibmJmIjoxNzE0NTk5ODk3LCJleHAiOjE3MjI1NDg2OTcsImlhdCI6MTcxNDU5OTg5OCwiaXNzIjoiZG90bmV0LXVzZXItand0cyJ9.lK0xCizSJRMHc11nFHraLhmxmttPPmGXjYjqUjr-QlQ
+###
+# @prompt username
+GET {{WebApplication_API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+{
+    UserName :{{username}}
+}
+### dsadd
+GET {{WebApplication_API_HostAddress}}/Invoice/Dapper/ListAllInvoice
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+###
