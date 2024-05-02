@@ -1,4 +1,6 @@
-﻿# multi database support
+﻿# Goal
+I try to create a simple azure blob usage, simple query with dapper,  and using Orm and Unit test
+# multi database support
 I create a context that can use with SQL server and SQLite you can use any of them by selection your DatabaseType in appsettings.json
 
 # Dapper implementation 
