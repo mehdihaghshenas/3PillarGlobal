@@ -49,15 +49,15 @@ namespace WebApplication_API.DapperRepository
                 }
                 props.Add(p);
             }
-            string insertText = string.Concat(props.Select(x => x.Name+", ").ToArray()).TrimEnd().TrimEnd(',');
-            string valueText = string.Concat(props.Select(x => "@" + x.Name+", ").ToArray()).TrimEnd().TrimEnd(',');
-            object?[] objects = new object[props.Count];
-            for (int i = 0; i < objects.Length; i++)
+            string insertText = string.Concat(props.Select(x => x.Name + ", ").ToArray()).TrimEnd().TrimEnd(',');
+            string valueText = string.Concat(props.Select(x => "@" + x.Name + ", ").ToArray()).TrimEnd().TrimEnd(',');
+            var queryParams = new DynamicParameters();
+            for (int i = 0; i < props.Count; i++)
             {
-                objects[i]= props[i].GetValue(item, null);
+                queryParams.Add("@" + props[i].Name, props[i].GetValue(item, null));
             }
 
-            return await _dbConnection.ExecuteAsync($"Insert Into ({insertText}) values ({valueText})", objects);
+            return await _dbConnection.ExecuteAsync($"Insert Into {_getPluralNames.GetPluralName(typeof(T).Name)} ({insertText}) values ({valueText})", queryParams);
         }
     }
 }
