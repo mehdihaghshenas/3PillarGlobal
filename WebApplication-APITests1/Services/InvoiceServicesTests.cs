@@ -29,7 +29,7 @@ namespace WebApplication_API.Services.Tests
             var blobService = new Mock<IBlobService>();
             InvoiceServices invoiceServices = new InvoiceServices(context, blobService.Object);
 
-            var result = await invoiceServices.GetAllWithDetails();
+            var result = await invoiceServices.GetAllWithDetailsAsync();
 
             Assert.NotNull(result);
             Assert.Single(result);
@@ -57,7 +57,7 @@ namespace WebApplication_API.Services.Tests
             var blobService = new Mock<IBlobService>();
             InvoiceServices invoiceServices = new InvoiceServices(context, blobService.Object);
 
-            var result = await invoiceServices.GetAllWithDetails();
+            var result = await invoiceServices.GetAllWithDetailsAsync();
             result.Should().NotBeNull();
             result.Should().HaveCount(1);
             result.First().InvoiceId.Should().Be(1);

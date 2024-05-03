@@ -24,12 +24,12 @@ namespace WebApplication_API.DapperRepository
         FROM Invoices i
             Left Outer JOIN InvoiceDetails id
         ON id.InvoiceId = i.InvoiceId;
-        """, (i, id) =>
+        """, (i, invoiceDetail) =>
             {
-                if (id != null)
+                if (invoiceDetail != null)
                 {
-                    id.InvoiceId = i.InvoiceId;
-                    i.InvoiceDetails.Add(id);
+                    invoiceDetail.InvoiceId = i.InvoiceId;
+                    i.InvoiceDetails.Add(invoiceDetail);
                 }
                 if (!dic.TryGetValue(i.InvoiceId, out Invoice? invoice))
                 {
@@ -38,10 +38,11 @@ namespace WebApplication_API.DapperRepository
                 }
                 else
                 {
-                    invoice.InvoiceDetails.Add(id);
+                    if (invoiceDetail != null)
+                        invoice.InvoiceDetails.Add(invoiceDetail);
                 }
                 return invoice;
-            },splitOn: "InvoiceDetailId");
+            }, splitOn: "InvoiceDetailId");
             return [.. dic.Values];
         }
     }

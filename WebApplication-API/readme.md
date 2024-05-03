@@ -7,6 +7,9 @@ I created a context that can be used with SQL server and SQLite you can use any 
 # Dapper implementation 
 to see Dapper implementation example see InvoiceRepository ./WebApplication-API/DapperRepository/InvoiceRepository.cs
 
+# generic base repository for Dapper
+I create generic base repository for Dapper and you can see it in ./WebApplication-API/DapperRepository/BaseRepository.cs
+
 # Ef Core Implementation
 # migration
 ## SQLite

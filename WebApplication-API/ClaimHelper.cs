@@ -14,7 +14,8 @@ namespace WebApplication_API
             foreach (var r in roles)
             {
                 var role = await roleManager.FindByNameAsync(r);
-                roleClaims.AddRange(await roleManager.GetClaimsAsync(role));
+                if (role != null)
+                    roleClaims.AddRange(await roleManager.GetClaimsAsync(role));
             }
             return roleClaims;
         }

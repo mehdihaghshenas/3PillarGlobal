@@ -72,19 +72,19 @@ namespace WebApplication_API.Services
                 }).ToList()
             };
         }
-        public Task<Invoice> EditInvoice(Invoice invoice)
+        public Task<Invoice> EditInvoiceAsync(Invoice invoice)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Invoice>> GetAllWithDetails()
+        public async Task<IEnumerable<Invoice>> GetAllWithDetailsAsync()
         {
             var query = _saleContext.Invoices.Include(x => x.InvoiceDetails);
             Console.WriteLine(query.ToQueryString());
             return await query.ToListAsync();
         }
 
-        public Task<Invoice> RemoveInvoice(Invoice invoice)
+        public Task<Invoice> RemoveInvoiceAsync(Invoice invoice)
         {
             throw new NotImplementedException();
         }

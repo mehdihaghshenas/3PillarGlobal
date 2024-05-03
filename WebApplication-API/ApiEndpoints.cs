@@ -13,13 +13,18 @@ namespace WebApplication_API
             routeBuilder.MapPost("/Create", Create).WithName("CreateInvoice").Produces<Invoice>().RequireAuthorization();
             routeBuilder.MapGet("/ListAllInvoice", (IInvoiceServices service) =>
             {
-                return service.GetAllWithDetails();
+                return service.GetAllWithDetailsAsync();
             }).WithName("GetAllInvoices").WithOpenApi();
 
             routeBuilder.MapGet("/Dapper/ListAllInvoice", (IInvoiceReportService service) =>
             {
                 return service.GetAllFactorsAsync();
             }).WithName("GetAllInvoicesDapper").WithOpenApi().RequireAuthorization(Policoies.InvoicePolicy);
+
+            routeBuilder.MapPost("/Dapper/Create", (IInvoiceReportService service, [FromBody] Invoice invoice) =>
+            {
+                return service.InsertInvoiceOnlyAsync(invoice);
+            }).WithName("CreateInvoicesDapper").WithOpenApi().RequireAuthorization(Policoies.InvoicePolicy);
 
             return routeBuilder;
         }

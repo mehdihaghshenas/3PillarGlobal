@@ -34,6 +34,16 @@ Authorization: Bearer {{Token}}
   ]
 }
 ###
+POST {{WebApplication_API_HostAddress}}/Invoice/Create
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+
+{
+  "invoiceId": 0,
+  "customerName": "Mehdi",
+  "tax": 12
+}
+###
 GET {{WebApplication_API_HostAddress}}/Invoice/ListAllInvoice
 ###
 Post {{WebApplication_API_HostAddress}}/auth/v1/getToken
@@ -47,3 +57,14 @@ Content-Type: application/json
 GET {{WebApplication_API_HostAddress}}/Invoice/Dapper/ListAllInvoice
 Content-Type: application/json
 Authorization: Bearer {{Token}}
+###
+POST {{WebApplication_API_HostAddress}}/Invoice/Dapper/Create
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+
+{
+  "invoiceId": 0,
+  "customerName": "Mat Action",
+  "tax": 12
+}
+###
