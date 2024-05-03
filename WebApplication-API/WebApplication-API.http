@@ -1,15 +1,49 @@
 @WebApplication_API_HostAddress = http://localhost:5155
-@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Ik1laGRpIiwic3ViIjoiTWVoZGkiLCJqdGkiOiI2MzcyYjY2YSIsInNjb3BlIjoiZ3JlZXRpbmdzX2FwaSIsInJvbGUiOlsiYWRtaW4iLCJ1c2VyIiwic2Rhc2QiXSwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6NTgyMDEiLCJodHRwczovL2xvY2FsaG9zdDo0NDMwMyIsImh0dHA6Ly9sb2NhbGhvc3Q6NTE1NSIsImh0dHBzOi8vbG9jYWxob3N0OjcyOTYiXSwibmJmIjoxNzE0NTk5ODk3LCJleHAiOjE3MjI1NDg2OTcsImlhdCI6MTcxNDU5OTg5OCwiaXNzIjoiZG90bmV0LXVzZXItand0cyJ9.lK0xCizSJRMHc11nFHraLhmxmttPPmGXjYjqUjr-QlQ
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJtaXNzaW9uIjoiR2V0SW52b2ljZVJlcG9ydCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6ImFkbWluIiwic3ViIjoiMzViN2QzN2UtNTE4NS00MWMxLWJhODEtNGM1YzczYjRkZGZjIiwiZnVsbE5hbWUiOiJhZG1pbiIsImp0aSI6ImI2MTkxODc4LTBjZTQtNDJhOS05ZmU5LTU5NTJmMzU1NzJlYiIsIkFzcE5ldC5JZGVudGl0eS5TZWN1cml0eVN0YW1wIjoiSDZGWldXUkRPUTdCQUhaNTRJVFA2RVc2WExIS0o1VkUiLCJleHAiOjE3MTQ3MTcwMjQsImlzcyI6Imh0dHBzOi8vbWFoZ2hzaGVuYXMuaXIvIiwiYXVkIjoiaHR0cHM6Ly9taGFnaHNoZW5hcy5pci8ifQ.slWax5Ftt0Z0PFSz8BFEL66mf6Cp0OMe6Uc8GuYPV4M
 ###
-# @prompt username
-GET {{WebApplication_API_HostAddress}}/weatherforecast/
-Accept: application/json
+POST {{WebApplication_API_HostAddress}}/auth/v1/addSampleData
+###
+Post {{WebApplication_API_HostAddress}}/auth/v1/getToken
+Content-Type: application/json
 
 {
-    UserName :{{username}}
+  "userName": "user",
+  "password": "User@123"
 }
-### dsadd
+###
+POST {{WebApplication_API_HostAddress}}/Invoice/Create
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+
+{
+  "invoiceId": 0,
+  "customerName": "Mat Action",
+  "tax": 12,
+  "invoiceDetails": [
+    {
+      "goodName": "Laptop",
+      "amount": 1,
+      "unitPrice": 1000.0
+    },
+
+    {
+      "goodName": "Mouse",
+      "amount": 2,
+      "unitPrice": 20
+    }  
+  ]
+}
+###
+GET {{WebApplication_API_HostAddress}}/Invoice/ListAllInvoice
+###
+Post {{WebApplication_API_HostAddress}}/auth/v1/getToken
+Content-Type: application/json
+
+{
+  "userName": "admin",
+  "password": "Admin@123"
+}
+###
 GET {{WebApplication_API_HostAddress}}/Invoice/Dapper/ListAllInvoice
 Content-Type: application/json
 Authorization: Bearer {{Token}}
-###

@@ -1,5 +1,6 @@
 ﻿# Goal
 I try to create a simple azure blob usage, simple query with dapper, using Orm and Unit test
+you can see my sample api calls in *WebApplication-API.http*
 # multi database support
 I created a context that can be used with SQL server and SQLite you can use any of them by selecting your DatabaseType in appsettings.json
 
@@ -12,6 +13,8 @@ to see Dapper implementation example see InvoiceRepository ./WebApplication-API/
 dotnet ef migrations add MigrationName --project ../SQLiteMigrations -- --provider Sqlite
 ## SqlServer
 dotnet ef migrations add MigrationName --project ../SqlServerMigrations -- --provider SqlServer
+## update database 
+dotnet ef database update
 
 # Unit test example
 ./WebApplication-APITests1/Services/InvoiceServicesTests.cs

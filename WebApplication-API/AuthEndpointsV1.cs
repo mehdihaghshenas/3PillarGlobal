@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,31 +16,41 @@ namespace WebApplication_API
             groupBuilder.MapPost("/createUser", CreateUser);
             groupBuilder.MapPost("/getToken", GetToken).Produces<LoginOutputViewModel>();
 
-            groupBuilder.MapPost("/addAdminRole",
-            [AllowAnonymous]
-            async (RoleManager<IdentityRole> roleManager) =>
+            groupBuilder.MapPost("/addSampleData", CreateSampleData).AllowAnonymous();
+            return groupBuilder;
+        }
+        [AllowAnonymous]
+        private static async Task<IResult> CreateSampleData(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
+        {
+            if (!userManager.Users.Any())
             {
-                var adminrole = await roleManager.FindByNameAsync("admin");
-                if (adminrole == null)
+                await userManager.CreateAsync(new IdentityUser() { UserName = "admin", Email = "admin@test.com" }, "Admin@123");
+                await userManager.CreateAsync(new IdentityUser() { UserName = "user", Email = "user@test.com" }, "User@123");
+                var adminRole = await roleManager.FindByNameAsync("admin");
+                if (adminRole == null)
                 {
                     var res = await roleManager.CreateAsync(new IdentityRole { Name = "admin" });
                     if (res.Succeeded)
                     {
-                        adminrole = await roleManager.FindByNameAsync("admin");
+                        adminRole = await roleManager.FindByNameAsync("admin");
                     }
                     else
                     {
                         return Results.BadRequest();
                     }
                 }
-                var claims = await roleManager.GetClaimsAsync(adminrole);
+                var claims = await roleManager.GetClaimsAsync(adminRole!);
                 if (claims == null || claims.Count == 0)
                 {
-                    await roleManager.AddClaimAsync(adminrole, new Claim("permission", "GetInvoiceReport"));
+                    await roleManager.AddClaimAsync(adminRole!, new Claim("permission", "GetInvoiceReport"));
                 }
-                return Results.Ok(claims);
-            }).AllowAnonymous();
-            return groupBuilder;
+                var admin = await userManager.FindByNameAsync("admin");
+                if (admin != null)
+                    await userManager.AddToRoleAsync(admin, "admin");
+                return Results.Ok();
+            }
+            else
+                return Results.BadRequest("Initial data already created!!!");
         }
 
         private static async Task<IResult> GetToken(LoginDto user, UserManager<IdentityUser> userMgr, RoleManager<IdentityRole> roleManager, IConfiguration configuration)

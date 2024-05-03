@@ -93,6 +93,7 @@ builder.Services.AddScoped<IGetPluralName, GetPluralName>();
 builder.Services.AddScoped<IInvoiceServices, InvoiceServices>();
 builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 builder.Services.AddScoped<IInvoiceReportService, InvoiceReportService>();
+builder.Services.AddScoped<IBlobService, BlobService>();
 builder.Services.Configure<JsonOptions>(options =>
 {
     options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -102,10 +103,7 @@ builder.Services.Configure<JsonOptions>(options =>
 
 
 #region permission
-builder.Services.AddAuthorizationBuilder()
-  .AddPolicy("InvoicePolicies", policy =>
-        policy
-            .RequireClaim("permission", "GetInvoiceReport"));
+builder.Services.AddAuthorizationBuilder().RegisterPolicies();
 #endregion
 
 // Add services to the container.
@@ -156,7 +154,7 @@ var summaries = new[]
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
-app.MapGet("/weatherforecast",[AllowAnonymous] () =>
+app.MapGet("/weatherforecast", [AllowAnonymous] () =>
 {
     var forecast = Enumerable.Range(1, 5).Select(index =>
         new WeatherForecast
@@ -173,24 +171,14 @@ app.MapGet("/weatherforecast",[AllowAnonymous] () =>
 .WithOpenApi()
 .ExcludeFromDescription().AllowAnonymous();
 
-app.MapGet("/Invoice/ListAllInvoice", (IInvoiceServices service) =>
-{
-    return service.GetAllWithDetails();
-}).WithName("GetAllInvoices").WithOpenApi();
+app.MapGroup("/Invoice").MapApiEndpoints();
 
-app.MapGet("/Invoice/Dapper/ListAllInvoice", (IInvoiceReportService service) =>
-{
-    return service.GetAllFactorsAsync();
-}).WithName("GetAllInvoicesDapper").WithOpenApi().RequireAuthorization("InvoicePolicies");
-
-app.MapGroup("/auh/v1/").MapAuthApiV1().WithTags("Authentication Apis");
+app.MapGroup("/auth/v1/").MapAuthApiV1().WithTags("Authentication Apis");
 app.Run();
 
 //app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
-
-
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
 

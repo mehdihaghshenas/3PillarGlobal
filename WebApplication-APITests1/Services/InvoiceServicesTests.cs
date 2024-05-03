@@ -18,14 +18,16 @@ namespace WebApplication_API.Services.Tests
         [Fact(DisplayName = "GetAllWithDetailsTest")]
         public async void GetAllWithDetailsTest()
         {
+            var invoices = new Invoice[]{
+                new Invoice() { CustomerName = "Mehdi", InvoiceId = 1, Tax = 12 }
+            };
             await using var context = new MockDb().CreateDbContext();
 
-            context.Invoices.Add(new Domains.Invoice() { CustomerName = "Mehdi", InvoiceId = 1, Tax = 12 });
+            context.Invoices.AddRange(invoices);
             context.SaveChanges();
 
-            var blobConfigsMock = new Mock<IOptionsMonitor<BlobConfigs>>();
-            blobConfigsMock.Setup(c => c.CurrentValue).Returns(new BlobConfigs() { ConnctionString = "test", PublicContainer = "uploads", SecureContainer = "upload-secure" });
-            InvoiceServices invoiceServices = new InvoiceServices(context, blobConfigsMock.Object);
+            var blobService = new Mock<IBlobService>();
+            InvoiceServices invoiceServices = new InvoiceServices(context, blobService.Object);
 
             var result = await invoiceServices.GetAllWithDetails();
 
@@ -34,6 +36,7 @@ namespace WebApplication_API.Services.Tests
             Assert.True(result.Any());
             Assert.True(result.Where(x => x.InvoiceId == 1).Any());
         }
+
         [Fact(DisplayName = "GetAllWithDetailTest2 with fluent")]
         public async void GetAllWithDetailTest2()
         {
@@ -51,9 +54,8 @@ namespace WebApplication_API.Services.Tests
                 );
             context.SaveChanges();
 
-            var blobConfigsMock = new Mock<IOptionsMonitor<BlobConfigs>>();
-            blobConfigsMock.Setup(c => c.CurrentValue).Returns(new BlobConfigs() { ConnctionString = "test", PublicContainer = "uploads", SecureContainer = "upload-secure" });
-            InvoiceServices invoiceServices = new InvoiceServices(context, blobConfigsMock.Object);
+            var blobService = new Mock<IBlobService>();
+            InvoiceServices invoiceServices = new InvoiceServices(context, blobService.Object);
 
             var result = await invoiceServices.GetAllWithDetails();
             result.Should().NotBeNull();
@@ -61,7 +63,7 @@ namespace WebApplication_API.Services.Tests
             result.First().InvoiceId.Should().Be(1);
             result.First().InvoiceDetails.Should().NotBeNull();
             result.First().InvoiceDetails.Count.Should().Be(2);
-            result.First().InvoiceDetails.Where(x=>x.InvoiceDetailId==1).Should().HaveCount(1);
+            result.First().InvoiceDetails.Where(x => x.InvoiceDetailId == 1).Should().HaveCount(1);
 
         }
     }

@@ -22,12 +22,15 @@ namespace WebApplication_API.DapperRepository
                id.Amount,
                id.UnitPrice
         FROM Invoices i
-            INNER JOIN InvoiceDetails id
+            Left Outer JOIN InvoiceDetails id
         ON id.InvoiceId = i.InvoiceId;
         """, (i, id) =>
             {
-                id.InvoiceId = i.InvoiceId;
-                i.InvoiceDetails.Add(id);
+                if (id != null)
+                {
+                    id.InvoiceId = i.InvoiceId;
+                    i.InvoiceDetails.Add(id);
+                }
                 if (!dic.TryGetValue(i.InvoiceId, out Invoice? invoice))
                 {
                     dic.Add(i.InvoiceId, i);
